@@ -1,0 +1,10 @@
+{
+    "require": {
+        "crwlr/crawler": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "GonzaloHirsch\\Dupe\\": "php/"
+        }
+    }
+}
