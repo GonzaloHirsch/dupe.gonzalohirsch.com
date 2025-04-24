@@ -23,6 +23,12 @@ if (!isset($options['u'])) {
 // Parsing URL as options.
 $url = $options['u'];
 
+if (!filter_var($url, FILTER_VALIDATE_URL)) {
+    echo "Invalid " . $url . " received\n";
+    var_dump($url);
+    exit(1);
+}
+
 // Crawler
 
 $store = new JsonFileStore(__DIR__ . '/results', 'dupe-gonzalohirsch-com');

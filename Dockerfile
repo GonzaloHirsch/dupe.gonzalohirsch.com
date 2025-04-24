@@ -24,14 +24,18 @@ ENV CHROME_PATH=/usr/bin/chromium-browser
 WORKDIR /app
 
 # Copy project files.
-COPY composer.* .
 COPY php/*.php ./php/
+COPY composer.* ./php/
 
 # Create directories.
 RUN mkdir php/cachedir php/results
 
+WORKDIR /app/php
+
 # Install crwlr
-RUN composer install
+RUN composer install && composer dump-autoload
+
+WORKDIR /app
 
 # Default command (override as needed)
 CMD [ "php", "-a" ]
