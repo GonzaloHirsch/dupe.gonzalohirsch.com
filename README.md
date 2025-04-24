@@ -23,3 +23,26 @@ composer install
 ```
 
 composer dump-autoload
+
+# Docker
+
+Build the image locally:
+
+```
+IMAGE_NAME="composer-ts-env"
+docker build -t $IMAGE_NAME .
+```
+
+Run it:
+
+```
+docker run -it --rm $IMAGE_NAME /bin/bash
+```
+
+Then execute any command in the CLI that you get. Alternatively, you could try to work with hot reload by binding the volume to `/app`
+
+```
+docker run -it --rm -v $(pwd):/app $IMAGE_NAME /bin/bash
+```
+
+This makes sure that your updates are reflected in the image. But the only issue is that it might not fully reflect the environment in the Docker image running in the cloud due to build dependencies. Best option is to develop with this and then test without the volume binding.

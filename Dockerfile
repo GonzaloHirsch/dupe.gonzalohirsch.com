@@ -2,25 +2,36 @@
 FROM composer:2
 
 # Install Node.js, npm, and TypeScript
-RUN apt-get update && apt-get install -y \
+RUN apk update && apk add \
     curl \
     gnupg \
     ca-certificates \
+    # https://github.com/php/php-src/issues/8681
+    linux-headers \
     lsb-release \
-    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g typescript \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    nodejs \
+    npm \
+    php-sockets \
+    chromium \
+    # https://stackoverflow.com/questions/1361925/how-to-enable-socket-in-php
+    && docker-php-ext-install sockets \
+    && npm install -g typescript
 
-# Install crwlr
-RUN composer install
+# Set environment variable so chrome-php knows where Chromium is
+ENV CHROME_PATH=/usr/bin/chromium-browser
 
 # Set working directory
 WORKDIR /app
 
-# Optional: copy your project files
-# COPY . .
+# Copy project files.
+COPY composer.* .
+COPY php/*.php ./php/
+
+# Create directories.
+RUN mkdir php/cachedir php/results
+
+# Install crwlr
+RUN composer install
 
 # Default command (override as needed)
 CMD [ "php", "-a" ]
