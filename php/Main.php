@@ -30,7 +30,7 @@ $store = new JsonFileStore(__DIR__ . '/results', 'dupe-gonzalohirsch-com');
 $crawler = new Crawler();
 
 // Better results with the headless browser.
-$crawler->getLoader()->useHeadlessBrowser();
+$crawler->getLoader()->useHeadlessBrowser()->browser()->addOptions(['noSandbox' => true]);
 
 $crawler->input($url)
     ->addStep(
