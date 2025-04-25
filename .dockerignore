@@ -1,0 +1,6 @@
+api/dist
+api/node_modules
+api/.env
+php/vendor
+php/results
+php/cachedir

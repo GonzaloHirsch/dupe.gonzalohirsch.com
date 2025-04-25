@@ -1,6 +1,10 @@
 # Use official Composer image as the base
 FROM composer:2
 
+ARG PORT=3000
+EXPOSE $PORT
+ENV PORT=$PORT
+
 # Install Node.js, npm, and TypeScript
 RUN apk update && apk add \
     curl \
@@ -24,18 +28,25 @@ ENV CHROME_PATH=/usr/bin/chromium-browser
 WORKDIR /app
 
 # Copy project files.
-COPY php/*.php ./php/
-COPY composer.* ./php/
+COPY php/ ./php/
+COPY api/ ./api/
 
 # Create directories.
 RUN mkdir php/cachedir php/results
+
+WORKDIR /app/api
+
+# Perform API installation
+RUN npm i
+
+# Perform API build
+RUN npm run build
 
 WORKDIR /app/php
 
 # Install crwlr
 RUN composer install && composer dump-autoload
 
-WORKDIR /app
+WORKDIR /app/api
 
-# Default command (override as needed)
-CMD [ "php", "-a" ]
+CMD [ "npm", "run", "start" ]
