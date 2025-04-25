@@ -1,3 +1,6 @@
+import { promises as fs } from 'fs';
+import { TProductWrapper } from '../types/types';
+
 const regexTest =
   /.*\[(EMERGENCY|ALERT|CRITICAL|ERROR|WARNING|NOTICE|INFO|DEBUG)\].*/;
 
@@ -22,4 +25,19 @@ export const parsePHPOutput = (
     console.error(`Attempted to process ${output} but got ${error}.`);
   }
   return { location };
+};
+
+export const loadPHPOutputFromFile = async (
+  absoluteFilepath: string,
+): Promise<TProductWrapper[]> => {
+  let fileContent;
+  try {
+    fileContent = await fs.readFile(absoluteFilepath, 'utf-8');
+    return JSON.parse(fileContent);
+  } catch (error: any) {
+    console.error(
+      `Could not process output from ${absoluteFilepath}: ${fileContent}`,
+    );
+  }
+  return [];
 };

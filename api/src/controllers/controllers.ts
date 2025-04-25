@@ -3,7 +3,11 @@ import { exec as execCallback } from 'child_process';
 import { isValidUrl } from '../utils/utils';
 import { promisify } from 'util';
 import asyncHandler from 'express-async-handler';
-import { parsePHPOutput, processPHPOutput } from '../utils/processor';
+import {
+  loadPHPOutputFromFile,
+  parsePHPOutput,
+  processPHPOutput,
+} from '../utils/processor';
 
 const exec = promisify(execCallback);
 
@@ -33,8 +37,14 @@ export const runCommand = asyncHandler(
 
       // Actually parse the output.
       const response = parsePHPOutput(output);
+      if (response.location === null || response.location === undefined) {
+        res.status(404).send();
+      }
 
-      res.send(response);
+      // Process the file content.
+      const content = await loadPHPOutputFromFile(response.location as string);
+
+      res.send(content);
     } catch (error: any) {
       console.error(`Error executing PHP:`, error);
       throw new Error(error.message);
