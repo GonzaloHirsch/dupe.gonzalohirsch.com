@@ -52,4 +52,4 @@ $crawler->runAndTraverse();
 
 // Results are stored where the filepath to the store points.
 // Reference: https://github.com/crwlrsoft/crawler/blob/fd6aac5133f4005eb343424ded266f6ce448b3bd/tests/Stores/JsonFileStoreTest.php
-print $store->filePath() . PHP_EOL;
+print "{" . '"result":"' . $store->filePath() . '"' . "}" . PHP_EOL;
