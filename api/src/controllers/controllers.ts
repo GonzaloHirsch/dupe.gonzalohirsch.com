@@ -3,10 +3,9 @@ import { exec as execCallback } from 'child_process';
 import { isValidUrl } from '../utils/utils';
 import { promisify } from 'util';
 import asyncHandler from 'express-async-handler';
+import { parsePHPOutput, processPHPOutput } from '../utils/processor';
 
 const exec = promisify(execCallback);
-const regexTest =
-  /.*\[(EMERGENCY|ALERT|CRITICAL|ERROR|WARNING|NOTICE|INFO|DEBUG)\].*/;
 
 export const runCommand = asyncHandler(
   async (req: Request, res: Response, _next: NextFunction) => {
@@ -24,26 +23,16 @@ export const runCommand = asyncHandler(
         console.error(`PHP stderr: ${stderr}`);
       }
 
-      const tokenisedStdout = stdout
-        .split('\n')
-        .filter((line) => line.length > 0);
-      const logs = tokenisedStdout.filter((line) => regexTest.test(line));
-      const output = tokenisedStdout.filter((line) => !regexTest.test(line));
+      // Process the output.
+      const { logs, output } = processPHPOutput(stdout);
 
       // Logging for visibility.
       console.log('Received URL:', url);
       console.debug(logs);
       console.debug('Potential Output:', output);
 
-      let response: {
-        location?: string;
-      } = {};
-      try {
-        response['location'] = JSON.parse(output?.[0])?.result;
-      } catch (error: any) {
-        console.error(`Attempted to process ${output} but got ${error}.`);
-        res.send(response);
-      }
+      // Actually parse the output.
+      const response = parsePHPOutput(output);
 
       res.send(response);
     } catch (error: any) {
