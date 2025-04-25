@@ -46,3 +46,9 @@ docker run -it --rm -v $(pwd):/app $IMAGE_NAME /bin/bash
 ```
 
 This makes sure that your updates are reflected in the image. But the only issue is that it might not fully reflect the environment in the Docker image running in the cloud due to build dependencies. Best option is to develop with this and then test without the volume binding.
+
+# API
+
+curl -X POST http://localhost:3000/api/ \
+ -H "Content-Type: application/json" \
+ -d '{"url": "https://example.com"}'

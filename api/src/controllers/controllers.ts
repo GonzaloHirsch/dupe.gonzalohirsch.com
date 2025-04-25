@@ -19,7 +19,7 @@ export const runCommand = asyncHandler(
 
       if (stderr) {
         // Optional: you can decide how to handle non-critical stderr output
-        console.warn(`PHP stderr: ${stderr}`);
+        console.error(`PHP stderr: ${stderr}`);
       }
 
       res.send(stdout); // Waits until PHP finishes, then sends response
