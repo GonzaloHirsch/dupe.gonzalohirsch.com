@@ -44,7 +44,11 @@ export const detectSchemaProduct = async (
     const content = await loadPHPOutputFromFile(response.location as string);
 
     // Get the first item if any.
-    return content?.[0].unnamed ?? null;
+    if (!content || content.length === 0 || !content[0].unnamed) {
+      return null;
+    }
+    const { unnamed } = content[0];
+    return { ...unnamed, _id: url };
   } catch (error: any) {
     console.error(`Error executing PHP:`, error);
     return null;

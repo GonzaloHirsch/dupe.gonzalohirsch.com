@@ -18,3 +18,10 @@ export class MissingDatabaseTypeError extends ConfigurationError {
     this.name = 'MissingDatabaseTypeError';
   }
 }
+
+export class MissingDatabaseClientError extends ConfigurationError {
+  constructor(type: string) {
+    super(`Missing database client for instance: ${type}`);
+    this.name = 'MissingDatabaseClientError';
+  }
+}

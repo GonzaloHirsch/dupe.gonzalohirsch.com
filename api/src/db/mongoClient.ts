@@ -1,5 +1,11 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { Collection, MongoClient, ServerApiVersion, Document } from 'mongodb';
 import { DupeDatabaseClient } from './clients';
+import { ISchemaProduct } from '../models/schemaProduct';
+import { MissingDatabaseClientError } from '../errors/configurationErrors';
+
+enum Collections {
+  SCHEMA_PRODUCT = 'schemaProduct',
+}
 
 export class DupeMongoDBClient implements DupeDatabaseClient {
   private database: string;
@@ -9,6 +15,35 @@ export class DupeMongoDBClient implements DupeDatabaseClient {
   public constructor(uri: string, database: string) {
     this.client = this.getClient(uri);
     this.database = database;
+  }
+
+  /**
+   * Getter for the MongoDB collection.
+   * @param collection - The name of the collection to get.
+   * @returns an instance of the given collection.
+   */
+  private getCollection<DocumentType extends Document>(
+    collection: Collections,
+  ): Collection<DocumentType> {
+    if (!this.client) {
+      throw new MissingDatabaseClientError('MongoDB');
+    }
+    return this.client.db(this.database).collection<DocumentType>(collection);
+  }
+
+  /**
+   * Wrapper for running an operation on the MongoDB client.
+   * @param operation - The operation to run.
+   * @returns the result of the operation.
+   */
+  private async runOperation(operation: () => Promise<any>): Promise<any> {
+    try {
+      const results = await operation();
+      return results;
+    } catch (error) {
+      console.error('Error running operation:', error);
+      throw error;
+    }
   }
 
   /**
@@ -39,5 +74,21 @@ export class DupeMongoDBClient implements DupeDatabaseClient {
       },
     });
     return this.client;
+  }
+
+  public async storeSchemaProduct(product: ISchemaProduct) {
+    // https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/write-operations/insert/
+    const collection = this.getCollection<ISchemaProduct>(
+      Collections.SCHEMA_PRODUCT,
+    );
+    await this.runOperation(async () => {
+      return await collection.updateOne(
+        product,
+        {
+          $set: product,
+        },
+        { upsert: true },
+      );
+    });
   }
 }

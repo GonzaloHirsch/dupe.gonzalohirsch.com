@@ -3,6 +3,11 @@ import asyncHandler from 'express-async-handler';
 import { detectSchemaProduct } from './productControllers';
 import { gateOnURL } from '../utils/gate';
 import { isValidUrl } from '../utils/utils';
+import { getCurrentClient } from '../db/clients';
+import { ISchemaProduct } from '../models/schemaProduct';
+
+// Getter for the current database client.
+const client = getCurrentClient();
 
 export const detectProduct = asyncHandler(
   async (req: Request, res: Response, _next: NextFunction) => {
@@ -12,12 +17,15 @@ export const detectProduct = asyncHandler(
     gateOnURL(url);
 
     // If we don't detect a product, we won't store that in the DB.
-    const schemaProduct = await detectSchemaProduct(url);
+    let schemaProduct = await detectSchemaProduct(url);
     if (schemaProduct === null) {
       res.status(404).send();
     }
 
-    // TODO: Store the schemaProduct in the DB.
+    // Store the schemaProduct in the DB.
+    schemaProduct = schemaProduct as ISchemaProduct;
+    client.storeSchemaProduct(schemaProduct);
+
     // TODO: Map the schema product to a product model.
 
     res.status(200).send(schemaProduct);

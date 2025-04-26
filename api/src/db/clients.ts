@@ -1,9 +1,10 @@
 import config, { DatabaseType } from '../config/config';
 import { MissingDatabaseTypeError } from '../errors/configurationErrors';
+import { ISchemaProduct } from '../models/schemaProduct';
 import { DupeMongoDBClient } from './mongoClient';
 
 export interface DupeDatabaseClient {
-  //   getInstance: () => DupeDatabaseClient;
+  storeSchemaProduct: (product: ISchemaProduct) => void;
 }
 
 const CLIENTS: {
