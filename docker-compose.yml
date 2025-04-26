@@ -1,0 +1,16 @@
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '${DB_PORT}:27017'
+    volumes:
+      - dbdata6:/data/db
+    networks:
+      - node-network
+
+volumes:
+  dbdata6:
+
+networks:
+  node-network:
+    driver: bridge

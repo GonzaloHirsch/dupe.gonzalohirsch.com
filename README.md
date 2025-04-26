@@ -55,3 +55,7 @@ This makes sure that your updates are reflected in the image. But the only issue
 curl -X POST http://localhost:3000/api/ \
  -H "Content-Type: application/json" \
  -d '{"url": "https://example.com"}'
+
+# Compose
+
+docker-compose up && docker-compose rm -fsv
