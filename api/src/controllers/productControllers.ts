@@ -15,7 +15,7 @@ const exec = promisify(execCallback);
  * @param {string} url - The URL to be processed.
  * @returns {Promise<ISchemaProduct | null>} - The detected product or null if not found.
  */
-export const detectProduct = async (
+export const detectSchemaProduct = async (
   url: string,
 ): Promise<ISchemaProduct | null> => {
   try {

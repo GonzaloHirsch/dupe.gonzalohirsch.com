@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { runCommand } from '../controllers/controllers';
+import { detectProduct } from '../controllers/apiControllers';
 
 const router = Router();
 
-router.post('/', runCommand);
+router.post('/detect', detectProduct);
 
 export default router;
