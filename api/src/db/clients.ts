@@ -8,7 +8,7 @@ export interface DupeDatabaseClient {
 
 const CLIENTS: {
   [key in DatabaseType]: {
-    getInstance: () => DupeDatabaseClient;
+    getInstance: (uri: string, database: string) => DupeDatabaseClient;
   };
 } = {
   [DatabaseType.MONGODB]: {
@@ -25,5 +25,8 @@ export const getCurrentClient = (): DupeDatabaseClient => {
   if (!CLIENTS[config.db.type]) {
     throw new MissingDatabaseTypeError(config.db.type);
   }
-  return CLIENTS[config.db.type].getInstance();
+  return CLIENTS[config.db.type].getInstance(
+    config.db.uri as string,
+    config.db.database as string,
+  );
 };

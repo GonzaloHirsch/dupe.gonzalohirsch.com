@@ -1,24 +1,25 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
-import config from '../config/config';
 import { DupeDatabaseClient } from './clients';
 
 export class DupeMongoDBClient implements DupeDatabaseClient {
+  private database: string;
   private client: MongoClient | null;
   private static instance: DupeMongoDBClient | null = null;
 
-  public constructor() {
-    this.client = this.getClient();
+  public constructor(uri: string, database: string) {
+    this.client = this.getClient(uri);
+    this.database = database;
   }
 
   /**
    * Getter for a singleton instance of the MongoDB client.
    * @returns {DupeMongoDBClient} - The singleton instance of the MongoDB client.
    */
-  public static getInstance(): DupeMongoDBClient {
+  public static getInstance(uri: string, database: string): DupeMongoDBClient {
     if (this.instance) {
       return this.instance;
     }
-    this.instance = new DupeMongoDBClient();
+    this.instance = new DupeMongoDBClient(uri, database);
     return this.instance;
   }
 
@@ -26,11 +27,10 @@ export class DupeMongoDBClient implements DupeDatabaseClient {
    * Getter for an actual MongoDB client.
    * @returns {MongoClient} - The MongoDB client instance.
    */
-  private getClient(): MongoClient {
+  private getClient(uri: string): MongoClient {
     if (this.client) {
       return this.client;
     }
-    const uri = config.db.uri as string;
     this.client = new MongoClient(uri, {
       serverApi: {
         version: ServerApiVersion.v1,

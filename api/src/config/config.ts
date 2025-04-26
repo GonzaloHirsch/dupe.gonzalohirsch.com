@@ -12,6 +12,7 @@ interface Config {
   nodeEnv: string;
   db: {
     uri: string | undefined;
+    database: string | undefined;
     type: DatabaseType;
   };
 }
@@ -22,11 +23,15 @@ const config: Config = {
   db: {
     uri: process.env.DB_URI,
     type: process.env.DB_TYPE as DatabaseType,
+    database: process.env.DB_NAME,
   },
 };
 
 if (!config.db.uri) {
   throw new MissingDatabaseConfigurationError('uri');
+}
+if (!config.db.database) {
+  throw new MissingDatabaseConfigurationError('database name');
 }
 
 export default config;
