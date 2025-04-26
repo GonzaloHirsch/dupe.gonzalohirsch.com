@@ -10,10 +10,14 @@ export const detectProduct = asyncHandler(
     // Gating logic.
     gateOnURL(url);
 
+    // If we don't detect a product, we won't store that in the DB.
     const schemaProduct = await detectSchemaProduct(url);
     if (schemaProduct === null) {
       res.status(404).send();
     }
+
+    // TODO: Store the schemaProduct in the DB.
+    // TODO: Map the schema product to a product model.
 
     res.send(schemaProduct);
   },
