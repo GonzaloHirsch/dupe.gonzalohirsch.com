@@ -16,6 +16,7 @@ export const detectProduct = asyncHandler(
     // Gating logic.
     gateOnURL(url);
 
+    // Verify if the product is already in the DB.
     const dbDocument = await client.getSchemaProduct(url);
     if (dbDocument) {
       console.debug('Found product in DB:', dbDocument);
@@ -32,8 +33,6 @@ export const detectProduct = asyncHandler(
 
     // Store the schemaProduct in the DB.
     client.storeSchemaProduct(url, schemaProduct as ISchemaProduct);
-
-    // TODO: Map the schema product to a product model.
 
     res.status(200).send(schemaProduct);
   },
