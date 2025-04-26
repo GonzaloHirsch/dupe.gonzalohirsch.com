@@ -4,7 +4,7 @@ import { ISchemaProduct } from '../models/schemaProduct';
 import { DupeMongoDBClient } from './mongoClient';
 
 export interface DupeDatabaseClient {
-  storeSchemaProduct: (product: ISchemaProduct) => void;
+  storeSchemaProduct: (uri: string, product: ISchemaProduct) => void;
 }
 
 const CLIENTS: {

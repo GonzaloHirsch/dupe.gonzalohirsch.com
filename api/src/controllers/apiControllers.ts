@@ -23,8 +23,7 @@ export const detectProduct = asyncHandler(
     }
 
     // Store the schemaProduct in the DB.
-    schemaProduct = schemaProduct as ISchemaProduct;
-    client.storeSchemaProduct(schemaProduct);
+    client.storeSchemaProduct(url, schemaProduct as ISchemaProduct);
 
     // TODO: Map the schema product to a product model.
 

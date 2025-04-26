@@ -2,6 +2,7 @@ import { Collection, MongoClient, ServerApiVersion, Document } from 'mongodb';
 import { DupeDatabaseClient } from './clients';
 import { ISchemaProduct } from '../models/schemaProduct';
 import { MissingDatabaseClientError } from '../errors/configurationErrors';
+import { IDBSchemaProduct } from '../models/db';
 
 enum Collections {
   SCHEMA_PRODUCT = 'schemaProduct',
@@ -76,16 +77,20 @@ export class DupeMongoDBClient implements DupeDatabaseClient {
     return this.client;
   }
 
-  public async storeSchemaProduct(product: ISchemaProduct) {
+  public async storeSchemaProduct(uri: string, product: ISchemaProduct) {
     // https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/write-operations/insert/
-    const collection = this.getCollection<ISchemaProduct>(
+    const collection = this.getCollection<IDBSchemaProduct>(
       Collections.SCHEMA_PRODUCT,
     );
+    const doc: IDBSchemaProduct = {
+      _id: uri,
+      ...product,
+    };
     await this.runOperation(async () => {
       return await collection.updateOne(
-        product,
+        doc,
         {
-          $set: product,
+          $set: doc,
         },
         { upsert: true },
       );

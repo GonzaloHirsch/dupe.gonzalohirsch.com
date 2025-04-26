@@ -44,7 +44,6 @@ export interface ISchemaProduct {
     };
   }[];
   url?: string;
-  _id?: string;
 }
 
 export interface ISchemaProductWrapper {
