@@ -2,14 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import { isValidUrl } from '../utils/utils';
 import asyncHandler from 'express-async-handler';
 import { detectProduct } from './productControllers';
+import { gateOnURL } from '../utils/gate';
 
 export const runCommand = asyncHandler(
   async (req: Request, res: Response, _next: NextFunction) => {
     const { url } = req.body;
 
-    if (!isValidUrl(url)) {
-      throw new Error(`Invalid URL ${url}.`);
-    }
+    // Gating logic.
+    gateOnURL(url);
 
     const schemaProduct = await detectProduct(url);
     if (schemaProduct === null) {
