@@ -19,6 +19,6 @@ export const detectProduct = asyncHandler(
     // TODO: Store the schemaProduct in the DB.
     // TODO: Map the schema product to a product model.
 
-    res.send(schemaProduct);
+    res.status(200).send(schemaProduct);
   },
 );
