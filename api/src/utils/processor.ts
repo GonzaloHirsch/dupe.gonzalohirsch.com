@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import { TProductWrapper } from '../types/types';
+import { ISchemaProductWrapper } from '../models/schemaProduct';
 
 const regexTest =
   /.*\[(EMERGENCY|ALERT|CRITICAL|ERROR|WARNING|NOTICE|INFO|DEBUG)\].*/;
@@ -29,7 +29,7 @@ export const parsePHPOutput = (
 
 export const loadPHPOutputFromFile = async (
   absoluteFilepath: string,
-): Promise<TProductWrapper[]> => {
+): Promise<ISchemaProductWrapper[]> => {
   let fileContent;
   try {
     fileContent = await fs.readFile(absoluteFilepath, 'utf-8');

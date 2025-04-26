@@ -1,4 +1,4 @@
-export type TProduct = {
+export interface ISchemaProduct {
   '@context'?: string;
   '@type'?: 'Product';
   aggregateRating?: {
@@ -44,8 +44,8 @@ export type TProduct = {
     };
   }[];
   url?: string;
-};
+}
 
-export type TProductWrapper = {
-  unnamed?: TProduct;
-};
+export interface ISchemaProductWrapper {
+  unnamed?: ISchemaProduct;
+}
