@@ -1,4 +1,4 @@
-const quoteRegex = /['"]/g;
+const quoteRegex = /['"`]/g;
 
 export function isValidUrl(url: string): boolean {
   try {

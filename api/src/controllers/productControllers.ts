@@ -7,8 +7,14 @@ import {
 } from '../utils/processor';
 import { ISchemaProduct } from '../models/schemaProduct';
 
+// So that we can await the exec function.
 const exec = promisify(execCallback);
 
+/**
+ * Detects a product schema from a given URL.
+ * @param {string} url - The URL to be processed.
+ * @returns {Promise<ISchemaProduct | null>} - The detected product or null if not found.
+ */
 export const detectProduct = async (
   url: string,
 ): Promise<ISchemaProduct | null> => {

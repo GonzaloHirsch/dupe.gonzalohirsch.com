@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { isValidUrl } from '../utils/utils';
 import asyncHandler from 'express-async-handler';
 import { detectProduct } from './productControllers';
 import { gateOnURL } from '../utils/gate';
