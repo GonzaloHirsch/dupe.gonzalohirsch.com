@@ -11,3 +11,10 @@ export class MissingDatabaseConfigurationError extends ConfigurationError {
     this.name = 'MissingDatabaseConfigurationError';
   }
 }
+
+export class MissingDatabaseTypeError extends ConfigurationError {
+  constructor(type: string) {
+    super(`Database type is missing from internal configuration: ${type}`);
+    this.name = 'MissingDatabaseTypeError';
+  }
+}

@@ -3,7 +3,9 @@ import { MissingDatabaseConfigurationError } from '../errors/configurationErrors
 
 dotenv.config();
 
-type DatabaseType = 'MongoDB';
+export enum DatabaseType {
+  MONGODB = 'MongoDB',
+}
 
 interface Config {
   port: number;
