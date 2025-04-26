@@ -16,10 +16,18 @@ export const detectProduct = asyncHandler(
     // Gating logic.
     gateOnURL(url);
 
+    const dbDocument = await client.getSchemaProduct(url);
+    if (dbDocument) {
+      console.debug('Found product in DB:', dbDocument);
+      res.status(200).send(dbDocument);
+      return;
+    }
+
     // If we don't detect a product, we won't store that in the DB.
     let schemaProduct = await detectSchemaProduct(url);
     if (schemaProduct === null) {
       res.status(404).send();
+      return;
     }
 
     // Store the schemaProduct in the DB.

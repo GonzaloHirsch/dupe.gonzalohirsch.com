@@ -1,8 +1,14 @@
-import { Collection, MongoClient, ServerApiVersion, Document } from 'mongodb';
+import {
+  Collection,
+  MongoClient,
+  ServerApiVersion,
+  Document,
+  ObjectId,
+} from 'mongodb';
 import { DupeDatabaseClient } from './clients';
 import { ISchemaProduct } from '../models/schemaProduct';
 import { MissingDatabaseClientError } from '../errors/configurationErrors';
-import { IDBSchemaProduct } from '../models/db';
+import { IDBSchemaProduct } from '../models/db/mongo';
 
 enum Collections {
   SCHEMA_PRODUCT = 'schemaProduct',
@@ -82,18 +88,32 @@ export class DupeMongoDBClient implements DupeDatabaseClient {
     const collection = this.getCollection<IDBSchemaProduct>(
       Collections.SCHEMA_PRODUCT,
     );
-    const doc: IDBSchemaProduct = {
-      _id: uri,
-      ...product,
-    };
     await this.runOperation(async () => {
       return await collection.updateOne(
-        doc,
+        product,
         {
-          $set: doc,
+          $set: product,
         },
         { upsert: true },
       );
     });
+  }
+
+  public async getSchemaProduct(uri: string): Promise<ISchemaProduct> {
+    // https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/write-operations/insert/
+    const collection = this.getCollection<IDBSchemaProduct>(
+      Collections.SCHEMA_PRODUCT,
+    );
+    const result = await this.runOperation(async () => {
+      return await collection.findOne<IDBSchemaProduct>(
+        {
+          url: uri,
+        },
+        {
+          projection: { _id: 0 },
+        },
+      );
+    });
+    return result as ISchemaProduct;
   }
 }

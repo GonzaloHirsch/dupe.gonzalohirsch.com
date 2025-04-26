@@ -5,6 +5,7 @@ import { DupeMongoDBClient } from './mongoClient';
 
 export interface DupeDatabaseClient {
   storeSchemaProduct: (uri: string, product: ISchemaProduct) => void;
+  getSchemaProduct: (uri: string) => Promise<ISchemaProduct>;
 }
 
 const CLIENTS: {
